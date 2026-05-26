@@ -1,0 +1,59 @@
+.liquid-ether-container {
+  --liquid-x: 50%;
+  --liquid-y: 50%;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: auto;
+  touch-action: none;
+  opacity: 1;
+  z-index: 2;
+}
+
+.liquid-ether-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  mix-blend-mode: screen;
+}
+
+.liquid-ether-container::before,
+.liquid-ether-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.liquid-ether-container::before {
+  background:
+    radial-gradient(circle at var(--liquid-x) var(--liquid-y), rgba(255, 255, 255, 0.56), rgba(35, 216, 255, 0.6) 5rem, rgba(59, 130, 246, 0.46) 14rem, rgba(17, 55, 255, 0.28) 23rem, transparent 34rem);
+  filter: blur(18px) saturate(1.9);
+  mix-blend-mode: screen;
+  opacity: 1;
+  transition: background-position 0.18s ease-out;
+}
+
+.liquid-ether-container::after {
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 42%, rgba(0, 0, 0, 0.42) 78%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 34%, rgba(0, 0, 0, 0.38));
+  opacity: 0.78;
+}
+
+.hero .liquid-ether-container {
+  pointer-events: auto;
+}
+
+.hero .hero-inner {
+  z-index: 4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-ether-container canvas {
+    display: none;
+  }
+}

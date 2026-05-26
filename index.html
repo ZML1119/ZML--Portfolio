@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>郑美龄 | UI / UX Design Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=20260526m" />
+    <link rel="stylesheet" href="LiquidEther.css?v=20260526m" />
+  </head>
+  <body>
+    <div class="cursor-light" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="返回首页">
+        <span>ZML</span>
+        <strong>UI DESIGN</strong>
+      </a>
+      <nav class="nav-links" aria-label="主导航">
+        <a href="#profile">简历</a>
+        <a href="#work">作品</a>
+        <a href="#experience">经历</a>
+        <a href="#contact">联系</a>
+      </nav>
+      <a class="header-cta" href="#work">View Work</a>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div
+          class="liquid-ether-container"
+          aria-hidden="true"
+          data-colors="#3B82F6,#06B6D4,#c2edf5"
+          data-resolution="0.45"
+          data-auto-speed="0.5"
+          data-auto-intensity="2.2"
+          data-auto-resume-delay="3000"
+          data-opacity="0.96"
+        ></div>
+        <div class="hero-inner">
+          <div class="hero-copy hero-center reveal">
+            <p class="hero-script">Experience Strategy / Product Design / AI Workflow</p>
+            <h1 class="hero-title">
+              <span class="hero-title__text" data-text-type="Portfolio">Portfolio</span>
+              <span class="hero-title__cursor" aria-hidden="true">|</span>
+            </h1>
+            <p>
+              10 年产品设计专家，覆盖智控系统、能源管理、AI辅助设计、电商平台与出行会员体系。擅长从业务梳理、体验策略、视觉系统到落地推进，建立可复用的产品体验方案。
+            </p>
+            <div class="hero-actions">
+              <a class="primary-btn" href="#work">查看案例</a>
+              <a class="ghost-btn" href="#profile">个人简历</a>
+            </div>
+            <dl class="hero-stats" aria-label="设计经验摘要">
+              <div><dt>10+</dt><dd>年产品设计</dd></div>
+              <div><dt>200+</dt><dd>组件规范沉淀</dd></div>
+              <div><dt>11</dt><dd>精选项目案例</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section id="profile" class="profile-section">
+        <div class="profile-card reveal">
+          <div>
+            <p class="kicker">Resume</p>
+            <h2>郑美龄</h2>
+            <p class="role">求职意向：高级 UI/UX 设计师 · 设计专家 · 体验设计负责人</p>
+            <dl class="info-grid">
+              <div><dt>手机微信</dt><dd>15121014943</dd></div>
+              <div><dt>邮箱地址</dt><dd>627051691@qq.com</dd></div>
+              <div><dt>出生日期</dt><dd>1988.11.19</dd></div>
+              <div><dt>现居城市</dt><dd>上海</dd></div>
+              <div><dt>本科学历</dt><dd>华东师范大学 · 工业设计专业</dd></div>
+              <div><dt>硕士学历</dt><dd>华东师范大学 · 工业设计专业</dd></div>
+            </dl>
+          </div>
+          <div class="profile-photo-frame">
+            <img class="profile-photo" src="assets/portrait-zml-new.jpg" alt="郑美龄头像" />
+          </div>
+        </div>
+        <div class="advantage-grid">
+          <article class="advantage reveal">
+            <span>01</span>
+            <h3>产品设计专家</h3>
+            <p>10 年产品设计经验，熟悉 SaaS、数据可视化、能源管理和 C 端复杂业务场景。</p>
+          </article>
+          <article class="advantage reveal">
+            <span>02</span>
+            <h3>体系搭建者</h3>
+            <p>主导 200+ 组件设计规范与组件库，推动多端一致性和团队协作效率提升。</p>
+          </article>
+          <article class="advantage reveal">
+            <span>03</span>
+            <h3>项目团队领导者</h3>
+            <p>统筹设计团队完成多核心项目落地，具备跨部门协同、方案评审与交付管理经验。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="work" class="work-section">
+        <div class="section-head reveal">
+          <p class="kicker">Selected Projects</p>
+          <h2>真实案例作品</h2>
+          <div class="filter-bar" role="tablist" aria-label="案例筛选">
+            <button class="filter active" type="button" data-filter="all">全部</button>
+            <button class="filter" type="button" data-filter="component">组件库</button>
+            <button class="filter" type="button" data-filter="ai">AI</button>
+            <button class="filter" type="button" data-filter="app">App</button>
+            <button class="filter" type="button" data-filter="event">视觉</button>
+          </div>
+        </div>
+
+        <div class="project-grid">
+          <article class="project-card reveal tilt-card" data-category="b2b app" data-image="assets/case-ieasycomfort.jpg">
+            <img src="assets/case-ieasycomfort.jpg" alt="iEasyComfort i管家案例预览" />
+            <div>
+              <span>iEasyComfort · Midea iBuilding</span>
+              <h3>i管家</h3>
+              <p>数字中台协同、APP/Web/Pad 多端设计，覆盖设备管理、能源分析与数据反馈。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="event ai b2b" data-image="assets/case-carbon.jpg">
+            <img src="assets/case-carbon.jpg" alt="碳博会主视觉案例预览" />
+            <div>
+              <span>Low-carbon Exposition</span>
+              <h3>碳博会主视觉</h3>
+              <p>AI 辅助视觉探索，完成 KV、物料延展和现场应用，形成低碳展会视觉系统。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="b2b app" data-image="assets/case-energy.jpg">
+            <img src="assets/case-energy.jpg" alt="光储热柔案例预览" />
+            <div>
+              <span>iEasyEnergy</span>
+              <h3>光储热柔</h3>
+              <p>围绕光储热柔全链路，搭建设备监控、能耗可视化与能源协同的移动端体验。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="b2b component" data-image="assets/case-ioc-long.jpg">
+            <img src="assets/case-ioc-long.jpg" alt="IOC 智能运营数据可视化大屏案例预览" />
+            <div>
+              <span>IOC · Midea iBuilding</span>
+              <h3>IOC 智能运营数据可视化大屏</h3>
+              <p>基于自动化构建与可视化组件能力，沉淀多场景 IOC 数据大屏方案，支撑园区、工厂与总部运营监控。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="b2b component" data-image="assets/case-component-system-long.jpg">
+            <img src="assets/case-component-system-long.jpg" alt="组件系统搭建案例预览" />
+            <div>
+              <span>Component System Construction</span>
+              <h3>组件系统搭建</h3>
+              <p>构建设计中台、低代码研发与自动化构建体系，沉淀数据可视化、APP 与 PC 多端组件规范。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="b2b component" data-image="assets/case-component-management-long.jpg">
+            <img src="assets/case-component-management-long.jpg" alt="组件库应用-后台系统案例预览" />
+            <div>
+              <span>Management System</span>
+              <h3>组件库应用-后台系统</h3>
+              <p>将组件库落地到智慧空调管理系统与光储选型工具，统一后台复杂操作、表格、图表与表单体验。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="ai b2b" data-image="assets/case-ai.jpg">
+            <img src="assets/case-ai.jpg" alt="AI 工具赋能设计与产品探索案例预览" />
+            <div>
+              <span>AI Tool</span>
+              <h3>AI 工具赋能设计与产品探索</h3>
+              <p>沉淀 AI 图像、AI 组件、Agent 问答机器人等设计生产力应用场景。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="event b2b" data-image="assets/case-true-long.jpg">
+            <img src="assets/case-true-long.jpg" alt="TRUE 大会主视觉案例预览" />
+            <div>
+              <span>Midea Building Technologies TRUE Summit</span>
+              <h3>TRUE 大会主视觉</h3>
+              <p>负责两届 TRUE 行业峰会主 KV、分论坛视觉、会场导视与现场搭建落地，形成标准化活动视觉体系。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="app" data-image="assets/case-card.jpg">
+            <img src="assets/case-card.jpg" alt="购卡改版案例预览" />
+            <div>
+              <span>Hello Bike</span>
+              <h3>购卡改版</h3>
+              <p>围绕用户决策路径和转化效率，重构卡片购买流程、信息展示与反馈机制。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="app" data-image="assets/case-growth.jpg">
+            <img src="assets/case-growth.jpg" alt="成长会员案例预览" />
+            <div>
+              <span>Hello Bike</span>
+              <h3>成长会员</h3>
+              <p>基于 Hook 模型搭建会员成长路径，强化补贴效率、任务激励和服务感知。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="app" data-image="assets/case-jd.jpg">
+            <img src="assets/case-jd.jpg" alt="京东首页 8.0 案例预览" />
+            <div>
+              <span>JD App</span>
+              <h3>京东首页 8.0</h3>
+              <p>重构频道分发结构与视觉效率，提升点击率、广告营收与页面体验。</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="experience" class="experience-section">
+        <div class="section-head reveal">
+          <p class="kicker">Experience</p>
+          <h2>工作经历</h2>
+        </div>
+        <div class="timeline">
+          <article class="timeline-item reveal">
+            <time>2022.03 — 2026.02</time>
+            <h3>美的楼宇科技事业部 · 高级设计工程师（设计专家）</h3>
+            <p>负责云端产品、能源管理系统设计、企业级设计体系搭建及展会主视觉设计，统筹设计团队完成多核心项目落地，主导 AI 设计工具落地与团队协作机制搭建。</p>
+          </article>
+          <article class="timeline-item reveal">
+            <time>2019.10 — 2022.03</time>
+            <h3>哈啰出行 · 资深 UI 设计师</h3>
+            <p>负责两轮出行核心业务 UI/UX 全流程改版，新业务界面从 0 到 1 搭建，牵头活动组件库、SaaS 设计体系等设计体系建设。</p>
+          </article>
+          <article class="timeline-item reveal">
+            <time>2015.03 — 2019.06</time>
+            <h3>京东 · UI 设计师</h3>
+            <p>负责千万级流量频道与首页 8.0 改版，制定大促设计规范，提升页面表现与体验。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="contact" class="contact-section reveal">
+        <p class="kicker">Contact</p>
+        <h2>让复杂业务拥有更清晰、更高效的设计表达。</h2>
+        <div class="contact-actions">
+          <a class="primary-btn" href="mailto:627051691@qq.com">627051691@qq.com</a>
+          <a class="ghost-btn" href="tel:15121014943">15121014943</a>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="case-dialog" aria-label="案例详情">
+      <button class="dialog-close" type="button" aria-label="关闭案例">×</button>
+      <img src="" alt="" />
+    </dialog>
+
+    <script src="LiquidEther.js?v=20260526m"></script>
+    <script src="script.js?v=20260526m"></script>
+  </body>
+</html>

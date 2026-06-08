@@ -3,15 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="chat-proxy-url" content="https://YOUR-VERCEL-PROJECT.vercel.app/api/coze-chat" />
     <title>郑美龄 | UI / UX Design Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260527b" />
-    <link rel="stylesheet" href="LiquidEther.css?v=20260527b" />
+    <link rel="stylesheet" href="styles.css?v=20260608b" />
+    <link rel="stylesheet" href="LiquidEther.css?v=20260608b" />
   </head>
   <body>
     <div class="cursor-light" aria-hidden="true"></div>
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
     <header class="site-header">
       <a class="brand" href="#top" aria-label="返回首页">
         <span>ZML</span>
@@ -62,7 +64,7 @@
         </div>
       </section>
 
-      <section id="profile" class="profile-section">
+      <section id="profile" class="profile-section" data-section-label="01 / Resume">
         <div class="profile-card reveal">
           <div>
             <p class="kicker">Resume</p>
@@ -100,7 +102,7 @@
         </div>
       </section>
 
-      <section id="work" class="work-section">
+      <section id="work" class="work-section" data-section-label="02 / Selected work">
         <div class="section-head reveal">
           <p class="kicker">Selected Projects</p>
           <h2>真实案例作品</h2>
@@ -205,7 +207,7 @@
         </div>
       </section>
 
-      <section id="experience" class="experience-section">
+      <section id="experience" class="experience-section" data-section-label="03 / Experience">
         <div class="section-head reveal">
           <p class="kicker">Experience</p>
           <h2>工作经历</h2>
@@ -229,7 +231,7 @@
         </div>
       </section>
 
-      <section id="contact" class="contact-section reveal">
+      <section id="contact" class="contact-section reveal" data-section-label="04 / Contact">
         <p class="kicker">Contact</p>
         <h2>让复杂业务拥有更清晰、更高效的设计表达。</h2>
         <div class="contact-actions">
@@ -239,12 +241,29 @@
       </section>
     </main>
 
+    <aside class="chatbot" aria-label="客服机器人">
+      <button class="chatbot-toggle" type="button" aria-expanded="false" aria-controls="chatbot-panel">
+        智能问答
+      </button>
+      <section id="chatbot-panel" class="chatbot-panel" hidden>
+        <header class="chatbot-head">
+          <strong>客服助手</strong>
+          <button class="chatbot-close" type="button" aria-label="关闭客服">×</button>
+        </header>
+        <div class="chatbot-messages" aria-live="polite"></div>
+        <form class="chatbot-form">
+          <input class="chatbot-input" type="text" placeholder="输入你的问题…" required />
+          <button class="chatbot-send" type="submit">发送</button>
+        </form>
+      </section>
+    </aside>
+
     <dialog class="case-dialog" aria-label="案例详情">
       <button class="dialog-close" type="button" aria-label="关闭案例">×</button>
       <img src="" alt="" />
     </dialog>
 
-    <script src="LiquidEther.js?v=20260527b"></script>
-    <script src="script.js?v=20260527b"></script>
+    <script src="LiquidEther.js?v=20260608b"></script>
+    <script src="script.js?v=20260608b"></script>
   </body>
 </html>

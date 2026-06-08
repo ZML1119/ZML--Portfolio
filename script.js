@@ -9,6 +9,28 @@ const closeDialog = dialog?.querySelector(".dialog-close");
 const titleText = document.querySelector(".hero-title__text");
 const titleCursor = document.querySelector(".hero-title__cursor");
 const heroSection = document.querySelector(".hero");
+const chatbot = document.querySelector(".chatbot");
+const chatbotToggle = document.querySelector(".chatbot-toggle");
+const chatbotPanel = document.querySelector(".chatbot-panel");
+const chatbotClose = document.querySelector(".chatbot-close");
+const chatbotMessages = document.querySelector(".chatbot-messages");
+const chatbotForm = document.querySelector(".chatbot-form");
+const chatbotInput = document.querySelector(".chatbot-input");
+const chatProxyMeta = document.querySelector('meta[name="chat-proxy-url"]');
+const scrollProgress = document.querySelector(".scroll-progress span");
+const siteHeader = document.querySelector(".site-header");
+const navLinks = document.querySelectorAll(".nav-links a");
+const pageSections = [...document.querySelectorAll("main section[id]")];
+
+const COZE_WORKFLOW_ID = "7611119380751450175";
+const CHAT_PROXY_URL = chatProxyMeta?.content?.trim() || "";
+const hasConfiguredChatProxy = CHAT_PROXY_URL && !CHAT_PROXY_URL.includes("YOUR-VERCEL-PROJECT");
+
+if (heroSection) {
+  const heroRect = heroSection.getBoundingClientRect();
+  root.style.setProperty("--x", `${heroRect.left + heroRect.width / 2}px`);
+  root.style.setProperty("--y", `${heroRect.top + heroRect.height / 2}px`);
+}
 
 window.addEventListener("pointermove", (event) => {
   root.style.setProperty("--x", `${event.clientX}px`);
@@ -21,6 +43,45 @@ window.addEventListener("pointermove", (event) => {
     event.clientY >= rect.top &&
     event.clientY <= rect.bottom;
   document.body.classList.toggle("is-hero-pointer", isInsideHero);
+});
+
+const updateScrollState = () => {
+  const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+  root.style.setProperty("--scroll-progress", progress.toFixed(4));
+  document.body.classList.toggle("is-scrolled", window.scrollY > 34);
+
+  if (heroSection) {
+    const heroRect = heroSection.getBoundingClientRect();
+    const heroProgress = Math.min(1, Math.max(0, -heroRect.top / Math.max(1, heroRect.height)));
+    root.style.setProperty("--hero-copy-shift", `${(heroProgress * -34).toFixed(1)}px`);
+  }
+
+  let activeId = "";
+  pageSections.forEach((section) => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 140 && rect.bottom >= 140) activeId = section.id;
+  });
+  navLinks.forEach((link) => {
+    link.classList.toggle("is-active", link.getAttribute("href") === `#${activeId}`);
+  });
+
+  if (siteHeader) {
+    const heroBottom = heroSection?.getBoundingClientRect().bottom || 0;
+    root.style.setProperty("--header-lift", heroBottom < 80 ? "-2px" : "0");
+  }
+};
+
+updateScrollState();
+window.addEventListener("scroll", updateScrollState, { passive: true });
+window.addEventListener("resize", updateScrollState);
+
+heroSection?.addEventListener("pointerenter", () => {
+  document.body.classList.add("is-hero-pointer");
+});
+
+heroSection?.addEventListener("pointerleave", () => {
+  document.body.classList.remove("is-hero-pointer");
 });
 
 const runTitleType = () => {
@@ -83,12 +144,14 @@ tiltCards.forEach((card) => {
     if (angle < 0) angle += 360;
     card.style.setProperty("--edge-proximity", `${(edge * 100).toFixed(3)}`);
     card.style.setProperty("--cursor-angle", `${angle.toFixed(3)}deg`);
-    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+    card.style.setProperty("--tilt-x", `${rotateX.toFixed(2)}deg`);
+    card.style.setProperty("--tilt-y", `${rotateY.toFixed(2)}deg`);
   });
 
   card.addEventListener("pointerleave", () => {
     card.style.setProperty("--edge-proximity", "0");
-    card.style.transform = "";
+    card.style.setProperty("--tilt-x", "0deg");
+    card.style.setProperty("--tilt-y", "0deg");
   });
 });
 
@@ -101,7 +164,8 @@ filterButtons.forEach((button) => {
     projectCards.forEach((card) => {
       const categories = card.dataset.category?.split(" ") || [];
       const isVisible = filter === "all" || categories.includes(filter);
-      card.style.transform = "";
+      card.style.setProperty("--tilt-x", "0deg");
+      card.style.setProperty("--tilt-y", "0deg");
       card.style.setProperty("--edge-proximity", "0");
       card.classList.toggle("is-hidden", !isVisible);
     });
@@ -125,5 +189,138 @@ closeDialog?.addEventListener("click", () => {
 dialog?.addEventListener("click", (event) => {
   if (event.target === dialog) {
     dialog.close();
+  }
+});
+
+const addChatMessage = (role, text) => {
+  if (!chatbotMessages) return;
+  const item = document.createElement("div");
+  item.className = `chat-msg ${role}`;
+  item.textContent = text;
+  chatbotMessages.appendChild(item);
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+};
+
+const purgeLegacyChatWarnings = () => {
+  if (!chatbotMessages) return;
+  chatbotMessages.querySelectorAll(".chat-msg").forEach((item) => {
+    if (/客服接口尚未配置|Vercel 地址|Coze Token|配置 Token/.test(item.textContent || "")) {
+      item.remove();
+    }
+  });
+};
+
+const readBotReply = (json) => {
+  if (!json || typeof json !== "object") return "";
+  if (typeof json.output === "string") return json.output;
+  if (typeof json.data === "string") return json.data;
+  if (json.data && typeof json.data.output === "string") return json.data.output;
+  if (Array.isArray(json.messages)) {
+    const botMsg = json.messages.find((msg) => msg.role === "assistant" || msg.type === "answer");
+    if (botMsg?.content) return String(botMsg.content);
+  }
+  if (Array.isArray(json.additional_messages)) {
+    const botMsg = json.additional_messages.find((msg) => msg.role === "assistant");
+    if (botMsg?.content) return String(botMsg.content);
+  }
+  return "";
+};
+
+const getLocalPortfolioReply = (question) => {
+  const text = question.toLowerCase();
+  const normalized = question.replace(/\s/g, "");
+
+  if (/联系|电话|手机|微信|邮箱|mail|email|contact/.test(normalized)) {
+    return "可以通过手机/微信 15121014943 或邮箱 627051691@qq.com 联系郑美龄，目前现居上海。";
+  }
+
+  if (/项目|作品|案例|portfolio|work/.test(normalized)) {
+    return "作品集包含 i管家、IOC 智能运营数据可视化大屏、组件系统搭建、组件库应用-后台系统、AI 工具赋能设计、TRUE 大会主视觉、碳博会主视觉、光储热柔、京东首页 8.0、哈啰购卡改版和成长会员等项目。重点覆盖 B 端系统、组件库、AI 设计工具、活动视觉和 App 体验。";
+  }
+
+  if (/组件|设计系统|规范|component|system/.test(normalized)) {
+    return "她主导过 200+ 组件规范沉淀和组件库搭建，覆盖数据可视化、后台管理、App 与 PC 多端组件，目标是提升多端一致性、研发协作效率和复杂业务的设计落地质量。";
+  }
+
+  if (/ai|智能|agent|机器人|工具/.test(text) || /人工智能|问答/.test(normalized)) {
+    return "她在作品集中沉淀了 AI 图像、AI 组件、Agent 问答机器人等设计生产力应用场景，也做过 AI 辅助视觉探索和产品流程提效。";
+  }
+
+  if (/经历|经验|背景|简历|介绍|自己|是谁|resume|about/.test(normalized)) {
+    return "郑美龄是高级 UI/UX 设计师、设计专家、体验设计负责人，拥有 10 年产品设计经验。她擅长从业务梳理、体验策略、视觉系统到落地推进，服务过美的楼宇科技、哈啰出行和京东等业务场景。";
+  }
+
+  if (/优势|擅长|能力|skill|强项/.test(normalized)) {
+    return "她的核心优势是复杂 B 端业务体验设计、组件库与设计体系搭建、数据可视化、跨端一致性、AI 辅助设计探索，以及多项目团队协作和交付推进。";
+  }
+
+  return "你好，我是郑美龄作品集助手。你可以问我：她是谁、有哪些项目、擅长什么、组件库经验、AI 设计探索，或如何联系她。";
+};
+
+chatbotToggle?.addEventListener("click", () => {
+  if (!chatbotPanel) return;
+  const isOpen = !chatbotPanel.hasAttribute("hidden");
+  if (isOpen) {
+    chatbotPanel.setAttribute("hidden", "");
+    chatbotToggle.setAttribute("aria-expanded", "false");
+  } else {
+    chatbotPanel.removeAttribute("hidden");
+    chatbotToggle.setAttribute("aria-expanded", "true");
+    purgeLegacyChatWarnings();
+    if (chatbotMessages && chatbotMessages.children.length === 0) {
+      addChatMessage("bot", "你好，我是郑美龄作品集助手。你可以问我她的项目、优势、经历或联系方式。");
+    }
+    chatbotInput?.focus();
+  }
+});
+
+chatbotClose?.addEventListener("click", () => {
+  chatbotPanel?.setAttribute("hidden", "");
+  chatbotToggle?.setAttribute("aria-expanded", "false");
+});
+
+chatbotForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  purgeLegacyChatWarnings();
+  const question = chatbotInput?.value?.trim();
+  if (!question) return;
+
+  addChatMessage("user", question);
+  if (chatbotInput) chatbotInput.value = "";
+
+  if (!hasConfiguredChatProxy) {
+    window.setTimeout(() => {
+      addChatMessage("bot", getLocalPortfolioReply(question));
+    }, 180);
+    return;
+  }
+
+  addChatMessage("bot", "正在思考中…");
+
+  try {
+    const response = await fetch(CHAT_PROXY_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        workflow_id: COZE_WORKFLOW_ID,
+        question
+      })
+    });
+
+    const json = await response.json().catch(() => ({}));
+    chatbotMessages?.lastElementChild?.remove();
+
+    if (!response.ok) {
+      addChatMessage("bot", `请求失败：${response.status} ${json?.msg || json?.message || "请检查 Token 或权限"}`);
+      return;
+    }
+
+    const answer = readBotReply(json) || "机器人暂时没有返回内容。";
+    addChatMessage("bot", answer);
+  } catch (error) {
+    chatbotMessages?.lastElementChild?.remove();
+    addChatMessage("bot", `网络异常：${error?.message || "请稍后重试"}`);
   }
 });

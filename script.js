@@ -21,10 +21,13 @@ const scrollProgress = document.querySelector(".scroll-progress span");
 const siteHeader = document.querySelector(".site-header");
 const navLinks = document.querySelectorAll(".nav-links a");
 const pageSections = [...document.querySelectorAll("main section[id]")];
+const magneticItems = document.querySelectorAll(".header-cta, .primary-btn, .ghost-btn, .filter");
 
 const COZE_WORKFLOW_ID = "7611119380751450175";
 const CHAT_PROXY_URL = chatProxyMeta?.content?.trim() || "";
 const hasConfiguredChatProxy = CHAT_PROXY_URL && !CHAT_PROXY_URL.includes("YOUR-VERCEL-PROJECT");
+let lastScrollY = window.scrollY;
+let scrollSettleTimer = null;
 
 if (heroSection) {
   const heroRect = heroSection.getBoundingClientRect();
@@ -45,11 +48,42 @@ window.addEventListener("pointermove", (event) => {
   document.body.classList.toggle("is-hero-pointer", isInsideHero);
 });
 
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+const updateProjectMediaParallax = () => {
+  if (!projectCards.length) return;
+  projectCards.forEach((card) => {
+    if (card.classList.contains("is-hidden")) return;
+    const rect = card.getBoundingClientRect();
+    const centerOffset = (rect.top + rect.height / 2 - window.innerHeight / 2) / Math.max(1, window.innerHeight);
+    const mediaY = clamp(centerOffset * -24, -16, 16);
+    card.style.setProperty("--media-y", `${mediaY.toFixed(1)}px`);
+  });
+};
+
 const updateScrollState = () => {
   const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
   const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+  const velocity = clamp(window.scrollY - lastScrollY, -48, 48);
+  lastScrollY = window.scrollY;
   root.style.setProperty("--scroll-progress", progress.toFixed(4));
+  root.style.setProperty("--scroll-velocity", (velocity / 48).toFixed(3));
+  root.style.setProperty("--scroll-drift-y", `${(velocity * 0.16).toFixed(1)}px`);
+  root.style.setProperty("--scroll-drift-x", `${(velocity * -0.2).toFixed(1)}px`);
+  root.style.setProperty("--scroll-drift-rev-x", `${(velocity * 0.18).toFixed(1)}px`);
+  root.style.setProperty("--section-drift-y", `${(progress * -20).toFixed(1)}px`);
+  root.style.setProperty("--section-drift-rev-y", `${(progress * 16).toFixed(1)}px`);
   document.body.classList.toggle("is-scrolled", window.scrollY > 34);
+  document.body.classList.add("is-scrolling");
+
+  window.clearTimeout(scrollSettleTimer);
+  scrollSettleTimer = window.setTimeout(() => {
+    document.body.classList.remove("is-scrolling");
+    root.style.setProperty("--scroll-velocity", "0");
+    root.style.setProperty("--scroll-drift-y", "0px");
+    root.style.setProperty("--scroll-drift-x", "0px");
+    root.style.setProperty("--scroll-drift-rev-x", "0px");
+  }, 140);
 
   if (heroSection) {
     const heroRect = heroSection.getBoundingClientRect();
@@ -70,11 +104,61 @@ const updateScrollState = () => {
     const heroBottom = heroSection?.getBoundingClientRect().bottom || 0;
     root.style.setProperty("--header-lift", heroBottom < 80 ? "-2px" : "0");
   }
+
+  updateProjectMediaParallax();
 };
 
 updateScrollState();
 window.addEventListener("scroll", updateScrollState, { passive: true });
 window.addEventListener("resize", updateScrollState);
+
+const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+
+const smoothScrollTo = (targetY, duration = 900) => {
+  const startY = window.scrollY;
+  const distance = targetY - startY;
+  const start = performance.now();
+
+  const step = (now) => {
+    const elapsed = now - start;
+    const progress = clamp(elapsed / duration, 0, 1);
+    window.scrollTo(0, startY + distance * easeOutQuart(progress));
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  };
+
+  window.requestAnimationFrame(step);
+};
+
+document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  anchor.addEventListener("click", (event) => {
+    const href = anchor.getAttribute("href");
+    if (!href || href === "#") return;
+    const target = document.querySelector(href);
+    if (!target) return;
+    event.preventDefault();
+    const headerOffset = siteHeader ? siteHeader.getBoundingClientRect().height + 18 : 0;
+    const targetY = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+    smoothScrollTo(Math.max(0, targetY));
+    history.pushState(null, "", href);
+  });
+});
+
+magneticItems.forEach((item) => {
+  item.addEventListener("pointermove", (event) => {
+    const rect = item.getBoundingClientRect();
+    const x = event.clientX - rect.left - rect.width / 2;
+    const y = event.clientY - rect.top - rect.height / 2;
+    item.style.setProperty("--magnet-x", `${clamp(x * 0.16, -9, 9).toFixed(1)}px`);
+    item.style.setProperty("--magnet-y", `${clamp(y * 0.22, -8, 8).toFixed(1)}px`);
+  });
+
+  item.addEventListener("pointerleave", () => {
+    item.style.setProperty("--magnet-x", "0px");
+    item.style.setProperty("--magnet-y", "0px");
+  });
+});
 
 heroSection?.addEventListener("pointerenter", () => {
   document.body.classList.add("is-hero-pointer");

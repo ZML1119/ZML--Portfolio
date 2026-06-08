@@ -34,7 +34,14 @@
   filter: blur(18px) saturate(1.9);
   mix-blend-mode: screen;
   opacity: 1;
-  transition: background-position 0.18s ease-out;
+  transform: translate3d(var(--scroll-drift-rev-x, 0px), var(--scroll-drift-y, 0px), 0);
+  transition: background-position 0.18s ease-out, opacity 0.18s ease, filter 0.18s ease;
+  will-change: transform, filter;
+}
+
+body.is-scrolling .liquid-ether-container::before {
+  filter: blur(16px) saturate(2.25) brightness(1.12);
+  opacity: 1;
 }
 
 .liquid-ether-container::after {

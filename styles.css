@@ -246,10 +246,10 @@ main {
 
 .hero {
   position: relative;
-  min-height: clamp(560px, calc(100vh - 260px), 700px);
+  min-height: auto;
   display: grid;
-  align-items: center;
-  padding: 6px 0 30px;
+  align-items: start;
+  padding: clamp(56px, 7vh, 86px) 0 54px;
   overflow: hidden;
 }
 
@@ -361,7 +361,7 @@ body.is-scrolling .hero-bg {
 }
 
 .hero-inner {
-  min-height: clamp(500px, calc(100vh - 320px), 620px);
+  min-height: auto;
   display: grid;
   place-items: center;
   text-align: center;
@@ -428,7 +428,7 @@ h1 {
   z-index: 4;
   display: grid;
   justify-items: center;
-  transform: translate3d(0, calc(var(--hero-copy-shift, 0) - 54px), 0);
+  transform: translate3d(0, var(--hero-copy-shift, 0), 0);
   transition: transform 0.12s linear;
 }
 
@@ -1131,8 +1131,12 @@ dd {
     display: none;
   }
 
+  .hero {
+    padding-top: 54px;
+  }
+
   .hero-inner {
-    min-height: 540px;
+    min-height: auto;
   }
 
   h1 {
@@ -1177,11 +1181,11 @@ dd {
   }
 
   .hero {
-    padding-top: 34px;
+    padding-top: 42px;
   }
 
   .hero-inner {
-    min-height: 620px;
+    min-height: auto;
   }
 
   .hero-center {

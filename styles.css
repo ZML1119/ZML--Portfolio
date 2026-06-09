@@ -568,18 +568,7 @@ h1 {
 .work-section::before,
 .experience-section::before,
 .contact-section::before {
-  content: attr(data-section-label);
-  position: absolute;
-  top: 22px;
-  right: 0;
-  z-index: 0;
-  color: rgba(255, 255, 255, 0.08);
-  font-size: clamp(42px, 8vw, 112px);
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  pointer-events: none;
+  display: none;
 }
 
 .profile-card {

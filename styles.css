@@ -826,13 +826,11 @@ dd {
 
 .project-card:hover {
   border-color: rgba(35, 216, 255, 0.5);
-  --card-shift: -8px;
-  --media-scale: 1.055;
   box-shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
 }
 
 .project-card:active {
-  --card-shift: -3px;
+  --card-shift: 0px;
 }
 
 .project-card.is-hidden {
@@ -848,9 +846,8 @@ dd {
   object-fit: cover;
   object-position: top center;
   filter: saturate(1.08);
-  transform: translate3d(0, var(--media-y), 0) scale(var(--media-scale));
-  transition: transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.35s ease;
-  will-change: transform;
+  transform: none;
+  transition: filter 0.35s ease;
 }
 
 .project-card:hover img {

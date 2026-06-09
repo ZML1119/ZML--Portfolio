@@ -50,17 +50,6 @@ window.addEventListener("pointermove", (event) => {
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
-const updateProjectMediaParallax = () => {
-  if (!projectCards.length) return;
-  projectCards.forEach((card) => {
-    if (card.classList.contains("is-hidden")) return;
-    const rect = card.getBoundingClientRect();
-    const centerOffset = (rect.top + rect.height / 2 - window.innerHeight / 2) / Math.max(1, window.innerHeight);
-    const mediaY = clamp(centerOffset * -24, -16, 16);
-    card.style.setProperty("--media-y", `${mediaY.toFixed(1)}px`);
-  });
-};
-
 const updateScrollState = () => {
   const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
   const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
@@ -105,7 +94,6 @@ const updateScrollState = () => {
     root.style.setProperty("--header-lift", heroBottom < 80 ? "-2px" : "0");
   }
 
-  updateProjectMediaParallax();
 };
 
 updateScrollState();
@@ -215,8 +203,6 @@ tiltCards.forEach((card) => {
     const rect = card.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    const rotateX = ((y / rect.height) - 0.5) * -6;
-    const rotateY = ((x / rect.width) - 0.5) * 6;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     const dx = x - centerX;
@@ -228,14 +214,10 @@ tiltCards.forEach((card) => {
     if (angle < 0) angle += 360;
     card.style.setProperty("--edge-proximity", `${(edge * 100).toFixed(3)}`);
     card.style.setProperty("--cursor-angle", `${angle.toFixed(3)}deg`);
-    card.style.setProperty("--tilt-x", `${rotateX.toFixed(2)}deg`);
-    card.style.setProperty("--tilt-y", `${rotateY.toFixed(2)}deg`);
   });
 
   card.addEventListener("pointerleave", () => {
     card.style.setProperty("--edge-proximity", "0");
-    card.style.setProperty("--tilt-x", "0deg");
-    card.style.setProperty("--tilt-y", "0deg");
   });
 });
 

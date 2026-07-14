@@ -7,9 +7,9 @@
     <title>郑美龄 | UI / UX Design Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260609b" />
-    <link rel="stylesheet" href="LiquidEther.css?v=20260608e" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Roboto+Flex:ital,opsz,wdth,wght@0..1,8..144,25..151,100..1000&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=20260713a" />
+    <link rel="stylesheet" href="LiquidEther.css?v=20260706a" />
   </head>
   <body>
     <div class="cursor-light" aria-hidden="true"></div>
@@ -45,7 +45,7 @@
           <div class="hero-copy hero-center reveal">
             <p class="hero-script">Experience Strategy / Product Design / AI Workflow</p>
             <h1 class="hero-title">
-              <span class="hero-title__text" data-text-type="Portfolio">Portfolio</span>
+              <span class="hero-title__text" data-text-type="hello">hello</span>
               <span class="hero-title__cursor" aria-hidden="true">|</span>
             </h1>
             <p>
@@ -116,12 +116,12 @@
         </div>
 
         <div class="project-grid">
-          <article class="project-card reveal tilt-card" data-category="b2b app" data-image="assets/case-ieasycomfort.jpg">
-            <img src="assets/case-ieasycomfort.jpg" alt="iEasyComfort i管家案例预览" />
+          <article class="project-card reveal tilt-card" data-category="ai b2b app" data-image="assets/case-ieasycomfort-long.jpg?v=20260713">
+            <img src="assets/case-ieasycomfort.jpg?v=20260713" alt="iEasyComfort i管家案例预览" />
             <div>
               <span>iEasyComfort · Midea iBuilding</span>
               <h3>i管家</h3>
-              <p>数字中台协同、APP/Web/Pad 多端设计，覆盖设备管理、能源分析与数据反馈。</p>
+              <p>AI 辅助业务梳理与体验重构，完成 APP/Web/Pad 多端协同设计，覆盖设备管理、能源分析与数据反馈。</p>
             </div>
           </article>
           <article class="project-card reveal tilt-card" data-category="event ai b2b" data-image="assets/case-carbon.jpg">
@@ -130,6 +130,14 @@
               <span>Low-carbon Exposition</span>
               <h3>碳博会主视觉</h3>
               <p>AI 辅助视觉探索，完成 KV、物料延展和现场应用，形成低碳展会视觉系统。</p>
+            </div>
+          </article>
+          <article class="project-card reveal tilt-card" data-category="ai b2b component" data-image="assets/case-light-storage-selection-long.jpg?v=20260713">
+            <img src="assets/case-light-storage-selection.jpg?v=20260713" alt="光储选型工具案例预览" />
+            <div>
+              <span>Energy Selection Tool</span>
+              <h3>光储选型工具</h3>
+              <p>面向光储方案选型与收益测算，沉淀参数配置、设备推荐、方案报告和成本评估的后台工具体验。</p>
             </div>
           </article>
           <article class="project-card reveal tilt-card" data-category="b2b app" data-image="assets/case-energy.jpg">
@@ -162,14 +170,6 @@
               <span>Management System</span>
               <h3>组件库应用-后台系统</h3>
               <p>将组件库落地到智慧空调管理系统与光储选型工具，统一后台复杂操作、表格、图表与表单体验。</p>
-            </div>
-          </article>
-          <article class="project-card reveal tilt-card" data-category="ai b2b" data-image="assets/case-ai.jpg">
-            <img src="assets/case-ai.jpg" alt="AI 工具赋能设计与产品探索案例预览" />
-            <div>
-              <span>AI Tool</span>
-              <h3>AI 工具赋能设计与产品探索</h3>
-              <p>沉淀 AI 图像、AI 组件、Agent 问答机器人等设计生产力应用场景。</p>
             </div>
           </article>
           <article class="project-card reveal tilt-card" data-category="event b2b" data-image="assets/case-true-long.jpg">
@@ -242,19 +242,43 @@
     </main>
 
     <aside class="chatbot" aria-label="客服机器人">
+      <img class="chatbot-float-video" src="assets/chatbot-float-cutout.webp" alt="" aria-hidden="true" />
       <button class="chatbot-toggle" type="button" aria-expanded="false" aria-controls="chatbot-panel">
-        智能问答
+        作品集助手
       </button>
       <section id="chatbot-panel" class="chatbot-panel" hidden>
         <header class="chatbot-head">
-          <strong>客服助手</strong>
+          <strong>作品集助手</strong>
           <button class="chatbot-close" type="button" aria-label="关闭客服">×</button>
         </header>
-        <div class="chatbot-messages" aria-live="polite"></div>
-        <form class="chatbot-form">
-          <input class="chatbot-input" type="text" placeholder="输入你的问题…" required />
-          <button class="chatbot-send" type="submit">发送</button>
-        </form>
+        <div class="chatbot-intro">
+          <div class="chatbot-hero-card">
+            <div class="chatbot-avatar-card">
+              <img src="assets/chatbot-float-cutout.webp" alt="" />
+            </div>
+          </div>
+          <div class="chatbot-prompt-card">
+            <div class="chatbot-guide-bubble">
+              你可以直接问我：项目经历、设计优势、组件库经验、AI 探索或联系方式。
+            </div>
+            <div class="chatbot-question-chips" aria-label="快捷提问">
+              <span>介绍一下你自己</span>
+              <span>有哪些代表项目？</span>
+              <span>联系方式是什么？</span>
+            </div>
+          </div>
+          <form class="chatbot-intro-form">
+            <input class="chatbot-intro-input" type="text" placeholder="你好，请介绍一下你自己" required />
+            <button class="chatbot-intro-send" type="submit">发送</button>
+          </form>
+        </div>
+        <div class="chatbot-chat" hidden>
+          <div class="chatbot-messages" aria-live="polite"></div>
+          <form class="chatbot-form">
+            <input class="chatbot-input" type="text" placeholder="你好，请介绍一下你自己" required />
+            <button class="chatbot-send" type="submit">发送</button>
+          </form>
+        </div>
       </section>
     </aside>
 
@@ -263,7 +287,7 @@
       <img src="" alt="" />
     </dialog>
 
-    <script src="LiquidEther.js?v=20260608e"></script>
-    <script src="script.js?v=20260609a"></script>
+    <script src="LiquidEther.js?v=20260706a"></script>
+    <script src="script.js?v=20260709a"></script>
   </body>
 </html>

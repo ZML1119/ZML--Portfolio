@@ -13,6 +13,12 @@ const chatbot = document.querySelector(".chatbot");
 const chatbotToggle = document.querySelector(".chatbot-toggle");
 const chatbotPanel = document.querySelector(".chatbot-panel");
 const chatbotClose = document.querySelector(".chatbot-close");
+const chatbotIntro = document.querySelector(".chatbot-intro");
+const chatbotChat = document.querySelector(".chatbot-chat");
+const chatbotStart = document.querySelector(".chatbot-start");
+const chatbotIntroForm = document.querySelector(".chatbot-intro-form");
+const chatbotIntroInput = document.querySelector(".chatbot-intro-input");
+const chatbotQuestionChips = document.querySelectorAll(".chatbot-question-chips span");
 const chatbotMessages = document.querySelector(".chatbot-messages");
 const chatbotForm = document.querySelector(".chatbot-form");
 const chatbotInput = document.querySelector(".chatbot-input");
@@ -28,16 +34,87 @@ const CHAT_PROXY_URL = chatProxyMeta?.content?.trim() || "";
 const hasConfiguredChatProxy = CHAT_PROXY_URL && !CHAT_PROXY_URL.includes("YOUR-VERCEL-PROJECT");
 let lastScrollY = window.scrollY;
 let scrollSettleTimer = null;
+const pressurePointer = { x: 0, y: 0 };
+const pressureCursor = { x: 0, y: 0 };
+let pressureChars = [];
+const pressureClamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const pressureDistance = (a, b) => {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  return Math.sqrt(dx * dx + dy * dy);
+};
+const pressureAttr = (distance, maxDist, minVal, maxVal) => {
+  const val = maxVal - Math.abs((maxVal * distance) / maxDist);
+  return Math.max(minVal, val + minVal);
+};
+
+const initPressureTitle = () => {
+  if (!titleText || titleText.dataset.pressureReady === "true") return;
+  const text = titleText.textContent || "";
+  titleText.dataset.pressureReady = "true";
+  titleText.textContent = "";
+  pressureChars = [...text].map((char) => {
+    const span = document.createElement("span");
+    span.className = "hero-title__char";
+    span.textContent = char;
+    span.dataset.char = char;
+    titleText.appendChild(span);
+    return span;
+  });
+  const rect = titleText.getBoundingClientRect();
+  pressurePointer.x = rect.left + rect.width / 2;
+  pressurePointer.y = rect.top + rect.height / 2;
+  pressureCursor.x = pressurePointer.x;
+  pressureCursor.y = pressurePointer.y;
+};
+
+const animatePressureTitle = () => {
+  if (pressureChars.length) {
+    pressurePointer.x += (pressureCursor.x - pressurePointer.x) / 15;
+    pressurePointer.y += (pressureCursor.y - pressurePointer.y) / 15;
+    const titleRect = titleText.getBoundingClientRect();
+    const maxDist = Math.max(1, titleRect.width / 2);
+
+    pressureChars.forEach((span) => {
+      const rect = span.getBoundingClientRect();
+      const charCenter = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+      const distance = pressureDistance(pressurePointer, charCenter);
+      const force = pressureClamp(1 - distance / maxDist, 0, 1);
+      const wdth = Math.round(138 + force * 13);
+      const wght = Math.floor(pressureAttr(distance, maxDist, 100, 900));
+      const ital = pressureAttr(distance, maxDist, 0, 1).toFixed(2);
+      const alpha = (0.9 + force * 0.1).toFixed(3);
+      const stretch = (1.5 + force * 0.08).toFixed(3);
+
+      span.style.setProperty("--char-wght", wght);
+      span.style.setProperty("--char-wdth", wdth);
+      span.style.setProperty("--char-ital", ital);
+      span.style.setProperty("--char-alpha", alpha);
+      span.style.setProperty("--char-stretch", stretch);
+    });
+  }
+  window.requestAnimationFrame(animatePressureTitle);
+};
+
+initPressureTitle();
+animatePressureTitle();
 
 if (heroSection) {
   const heroRect = heroSection.getBoundingClientRect();
   root.style.setProperty("--x", `${heroRect.left + heroRect.width / 2}px`);
   root.style.setProperty("--y", `${heroRect.top + heroRect.height / 2}px`);
+  pressureCursor.x = heroRect.left + heroRect.width / 2;
+  pressureCursor.y = heroRect.top + heroRect.height / 2;
 }
 
 window.addEventListener("pointermove", (event) => {
   root.style.setProperty("--x", `${event.clientX}px`);
   root.style.setProperty("--y", `${event.clientY}px`);
+  pressureCursor.x = event.clientX;
+  pressureCursor.y = event.clientY;
   if (!heroSection) return;
   const rect = heroSection.getBoundingClientRect();
   const isInsideHero =
@@ -158,6 +235,10 @@ heroSection?.addEventListener("pointerleave", () => {
 
 const runTitleType = () => {
   if (!titleText) return;
+  if (titleText.dataset.pressureReady === "true") {
+    if (titleCursor) titleCursor.style.display = "none";
+    return;
+  }
   const text = titleText.dataset.textType || titleText.textContent || "";
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -184,6 +265,19 @@ const runTitleType = () => {
 
 runTitleType();
 
+pageSections.forEach((section) => {
+  [...section.querySelectorAll(".reveal")].forEach((item, index) => {
+    item.style.setProperty("--reveal-index", index);
+  });
+  [
+    ...section.querySelectorAll(
+      ".section-head, .profile-card, .advantage-grid, .project-grid, .timeline, .contact-actions"
+    )
+  ].forEach((item, index) => {
+    item.style.setProperty("--section-item-index", index);
+  });
+});
+
 const revealObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
@@ -197,6 +291,17 @@ const revealObserver = new IntersectionObserver(
 );
 
 revealItems.forEach((item) => revealObserver.observe(item));
+
+const sectionObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      entry.target.classList.toggle("section-visible", entry.isIntersecting);
+    });
+  },
+  { threshold: 0.18, rootMargin: "-8% 0px -18%" }
+);
+
+pageSections.forEach((section) => sectionObserver.observe(section));
 
 tiltCards.forEach((card) => {
   card.addEventListener("pointermove", (event) => {
@@ -267,6 +372,26 @@ const addChatMessage = (role, text) => {
   chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
 };
 
+const setChatbotOpen = (open) => {
+  chatbot?.classList.toggle("is-open", open);
+  chatbotToggle?.setAttribute("aria-expanded", open ? "true" : "false");
+};
+
+const showChatIntro = () => {
+  chatbotIntro?.removeAttribute("hidden");
+  chatbotChat?.setAttribute("hidden", "");
+};
+
+const showChatConversation = () => {
+  chatbotIntro?.setAttribute("hidden", "");
+  chatbotChat?.removeAttribute("hidden");
+  purgeLegacyChatWarnings();
+  if (chatbotMessages && chatbotMessages.children.length === 0) {
+    addChatMessage("bot", "你好，我是郑美龄作品集助手。你可以问我她的项目、优势、经历或联系方式。");
+  }
+  chatbotInput?.focus();
+};
+
 const purgeLegacyChatWarnings = () => {
   if (!chatbotMessages) return;
   chatbotMessages.querySelectorAll(".chat-msg").forEach((item) => {
@@ -301,7 +426,7 @@ const getLocalPortfolioReply = (question) => {
   }
 
   if (/项目|作品|案例|portfolio|work/.test(normalized)) {
-    return "作品集包含 i管家、IOC 智能运营数据可视化大屏、组件系统搭建、组件库应用-后台系统、AI 工具赋能设计、TRUE 大会主视觉、碳博会主视觉、光储热柔、京东首页 8.0、哈啰购卡改版和成长会员等项目。重点覆盖 B 端系统、组件库、AI 设计工具、活动视觉和 App 体验。";
+    return "作品集包含 i管家、光储选型工具、IOC 智能运营数据可视化大屏、组件系统搭建、组件库应用-后台系统、TRUE 大会主视觉、碳博会主视觉、光储热柔、京东首页 8.0、哈啰购卡改版和成长会员等项目。重点覆盖 B 端系统、组件库、AI 辅助业务梳理、活动视觉和 App 体验。";
   }
 
   if (/组件|设计系统|规范|component|system/.test(normalized)) {
@@ -309,7 +434,7 @@ const getLocalPortfolioReply = (question) => {
   }
 
   if (/ai|智能|agent|机器人|工具/.test(text) || /人工智能|问答/.test(normalized)) {
-    return "她在作品集中沉淀了 AI 图像、AI 组件、Agent 问答机器人等设计生产力应用场景，也做过 AI 辅助视觉探索和产品流程提效。";
+    return "她在 i管家和光储选型工具中结合 AI 辅助业务梳理、方案表达和流程提效，也在作品集里接入了作品集问答助手，帮助访客快速理解项目与设计优势。";
   }
 
   if (/经历|经验|背景|简历|介绍|自己|是谁|resume|about/.test(normalized)) {
@@ -317,10 +442,10 @@ const getLocalPortfolioReply = (question) => {
   }
 
   if (/优势|擅长|能力|skill|强项/.test(normalized)) {
-    return "她的核心优势是复杂 B 端业务体验设计、组件库与设计体系搭建、数据可视化、跨端一致性、AI 辅助设计探索，以及多项目团队协作和交付推进。";
+    return "她的核心优势是复杂 B 端业务体验设计、组件库与设计体系搭建、数据可视化、跨端一致性、AI 辅助业务梳理，以及多项目团队协作和交付推进。";
   }
 
-  return "你好，我是郑美龄作品集助手。你可以问我：她是谁、有哪些项目、擅长什么、组件库经验、AI 设计探索，或如何联系她。";
+  return "你好，我是郑美龄作品集助手。你可以问我：她是谁、有哪些项目、擅长什么、组件库经验、AI 辅助业务梳理，或如何联系她。";
 };
 
 chatbotToggle?.addEventListener("click", () => {
@@ -328,21 +453,47 @@ chatbotToggle?.addEventListener("click", () => {
   const isOpen = !chatbotPanel.hasAttribute("hidden");
   if (isOpen) {
     chatbotPanel.setAttribute("hidden", "");
-    chatbotToggle.setAttribute("aria-expanded", "false");
+    setChatbotOpen(false);
   } else {
     chatbotPanel.removeAttribute("hidden");
-    chatbotToggle.setAttribute("aria-expanded", "true");
-    purgeLegacyChatWarnings();
-    if (chatbotMessages && chatbotMessages.children.length === 0) {
-      addChatMessage("bot", "你好，我是郑美龄作品集助手。你可以问我她的项目、优势、经历或联系方式。");
+    setChatbotOpen(true);
+    if (chatbotMessages?.children.length) {
+      showChatConversation();
+    } else {
+      showChatIntro();
     }
-    chatbotInput?.focus();
   }
+});
+
+chatbotStart?.addEventListener("click", () => {
+  showChatConversation();
+});
+
+chatbotIntroForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const question = chatbotIntroInput?.value?.trim();
+  showChatConversation();
+  if (question && chatbotInput && chatbotForm) {
+    chatbotInput.value = question;
+    chatbotForm.requestSubmit();
+  }
+});
+
+chatbotQuestionChips.forEach((chip) => {
+  chip.addEventListener("click", () => {
+    const question = chip.textContent?.trim();
+    if (!question) return;
+    showChatConversation();
+    if (chatbotInput && chatbotForm) {
+      chatbotInput.value = question;
+      chatbotForm.requestSubmit();
+    }
+  });
 });
 
 chatbotClose?.addEventListener("click", () => {
   chatbotPanel?.setAttribute("hidden", "");
-  chatbotToggle?.setAttribute("aria-expanded", "false");
+  setChatbotOpen(false);
 });
 
 chatbotForm?.addEventListener("submit", async (event) => {

@@ -30,25 +30,25 @@
 
 .liquid-ether-container::before {
   background:
-    radial-gradient(circle at var(--liquid-x) var(--liquid-y), rgba(255, 255, 255, 0.56), rgba(35, 216, 255, 0.6) 5rem, rgba(59, 130, 246, 0.46) 14rem, rgba(17, 55, 255, 0.28) 23rem, transparent 34rem);
-  filter: blur(18px) saturate(1.9);
+    radial-gradient(circle at var(--liquid-x) var(--liquid-y), rgba(255, 255, 255, 0.34), rgba(35, 216, 255, 0.32) 3.5rem, rgba(59, 130, 246, 0.22) 10rem, rgba(82, 39, 255, 0.14) 17rem, transparent 25rem);
+  filter: blur(18px) saturate(1.55);
   mix-blend-mode: screen;
-  opacity: 1;
+  opacity: 0.74;
   transform: translate3d(var(--scroll-drift-rev-x, 0px), var(--scroll-drift-y, 0px), 0);
   transition: background-position 0.18s ease-out, opacity 0.18s ease, filter 0.18s ease;
   will-change: transform, filter;
 }
 
 body.is-scrolling .liquid-ether-container::before {
-  filter: blur(16px) saturate(2.25) brightness(1.12);
-  opacity: 1;
+  filter: blur(20px) saturate(1.65) brightness(1.04);
+  opacity: 0.78;
 }
 
 .liquid-ether-container::after {
   background:
-    radial-gradient(circle at 50% 50%, transparent 0 42%, rgba(0, 0, 0, 0.42) 78%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 34%, rgba(0, 0, 0, 0.38));
-  opacity: 0.78;
+    radial-gradient(circle at 50% 50%, transparent 0 38%, rgba(0, 0, 0, 0.48) 78%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.28), transparent 30%, rgba(0, 0, 0, 0.52));
+  opacity: 0.72;
 }
 
 .hero .liquid-ether-container {

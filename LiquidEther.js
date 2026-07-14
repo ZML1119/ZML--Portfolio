@@ -14,7 +14,7 @@
       this.resizeRaf = null;
       this.time = 0;
       this.colors = this.readColors();
-      this.particles = this.createParticles(34);
+      this.particles = this.createParticles(18);
       this.init();
     }
 
@@ -59,13 +59,13 @@
     createParticles(count) {
       return Array.from({ length: count }, (_, index) => ({
         x: Math.random(),
-        y: 0.24 + Math.random() * 0.56,
-        radius: 48 + Math.random() * 150,
-        speedX: (Math.random() - 0.5) * 0.0018,
-        speedY: (Math.random() - 0.5) * 0.0014,
+        y: 0.18 + Math.random() * 0.62,
+        radius: 26 + Math.random() * 58,
+        speedX: 0.00045 + Math.random() * 0.00135,
+        speedY: (Math.random() - 0.5) * 0.00055,
         phase: Math.random() * Math.PI * 2,
-        wobble: 0.35 + Math.random() * 1.2,
-        alpha: 0.1 + Math.random() * 0.22,
+        wobble: 0.55 + Math.random() * 1.45,
+        alpha: 0.018 + Math.random() * 0.052,
         color: index % 3 === 0 ? this.colors.cyan : index % 3 === 1 ? this.colors.blue : this.colors.ice
       }));
     }
@@ -119,8 +119,8 @@
       const wobbleY = Math.sin(this.time * (particle.wobble * 0.8) + particle.phase) * 0.022;
       particle.x += particle.speedX;
       particle.y += particle.speedY;
-      if (particle.x < -0.18) particle.x = 1.18;
-      if (particle.x > 1.18) particle.x = -0.18;
+      if (particle.x < -0.08) particle.x = 1.08;
+      if (particle.x > 1.08) particle.x = -0.08;
       if (particle.y < 0.12) particle.y = 0.84;
       if (particle.y > 0.88) particle.y = 0.16;
 
@@ -135,7 +135,7 @@
       ctx.filter = "blur(18px)";
       const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
       gradient.addColorStop(0, `${particle.color}${alpha}`);
-      gradient.addColorStop(0.46, `${particle.color}${Math.round(Number.parseInt(alpha, 16) * 0.5).toString(16).padStart(2, "0")}`);
+      gradient.addColorStop(0.32, `${particle.color}${Math.round(Number.parseInt(alpha, 16) * 0.58).toString(16).padStart(2, "0")}`);
       gradient.addColorStop(1, `${particle.color}00`);
       ctx.fillStyle = gradient;
       ctx.beginPath();
@@ -158,7 +158,7 @@
         return;
       }
 
-      this.time += 0.04;
+      this.time += 0.032;
       const ctx = this.ctx;
       const w = this.width;
       const h = this.height;
@@ -174,18 +174,18 @@
 
       this.particles.forEach((particle, index) => this.drawParticle(particle, index));
 
-      ctx.filter = "blur(16px)";
-      this.drawBlob(px, py, 210 + speed * 240 + activeBoost * 120, this.colors.cyan, "ff");
-      this.drawBlob(px - w * 0.045, py + h * 0.03, 160 + speed * 120 + activeBoost * 70, this.colors.ice, "d8");
-      this.drawBlob(px + w * 0.055, py - h * 0.035, 210 + speed * 150 + activeBoost * 90, this.colors.blue, "ff");
-      this.drawBlob(px - this.velocity.x * w * 8, py - this.velocity.y * h * 8, 170 + speed * 190 + activeBoost * 80, this.colors.blue, "ec");
+      ctx.filter = "blur(18px)";
+      this.drawBlob(px, py, 110 + speed * 145 + activeBoost * 52, this.colors.cyan, "a8");
+      this.drawBlob(px - w * 0.035, py + h * 0.025, 74 + speed * 72 + activeBoost * 32, this.colors.ice, "72");
+      this.drawBlob(px + w * 0.045, py - h * 0.03, 118 + speed * 92 + activeBoost * 42, this.colors.blue, "98");
+      this.drawBlob(px - this.velocity.x * w * 6, py - this.velocity.y * h * 6, 84 + speed * 110 + activeBoost * 38, this.colors.blue, "82");
       ctx.filter = "none";
 
-      const highlight = ctx.createRadialGradient(px, py, 0, px, py, 260 + speed * 230 + activeBoost * 110);
-      highlight.addColorStop(0, `rgba(255, 255, 255, ${0.48 + speed * 0.32})`);
-      highlight.addColorStop(0.2, "rgba(194, 237, 245, 0.5)");
-      highlight.addColorStop(0.42, "rgba(35, 216, 255, 0.42)");
-      highlight.addColorStop(0.7, "rgba(17, 55, 255, 0.24)");
+      const highlight = ctx.createRadialGradient(px, py, 0, px, py, 190 + speed * 160 + activeBoost * 70);
+      highlight.addColorStop(0, `rgba(255, 255, 255, ${0.22 + speed * 0.18})`);
+      highlight.addColorStop(0.18, "rgba(194, 237, 245, 0.28)");
+      highlight.addColorStop(0.42, "rgba(35, 216, 255, 0.2)");
+      highlight.addColorStop(0.72, "rgba(82, 39, 255, 0.12)");
       highlight.addColorStop(1, "rgba(6, 182, 212, 0)");
       ctx.fillStyle = highlight;
       ctx.fillRect(0, 0, w, h);
